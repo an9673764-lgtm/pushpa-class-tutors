@@ -85,6 +85,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Pushpa Online Tuition" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Pushpa Online Tuition — International Online Tutors" },
+      { name: "twitter:title", content: "Pushpa Online Tuition — International Online Tutors" },
+      { property: "og:description", content: "Personalised online tutoring for Year 2 to A-Level students across UK, Cambridge IGCSE, UAE, Switzerland and German international curricula." },
+      { name: "twitter:description", content: "Personalised online tutoring for Year 2 to A-Level students across UK, Cambridge IGCSE, UAE, Switzerland and German international curricula." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4b66b4ae-5a14-4452-bafd-6e3e429db0c4/id-preview-042a56e4--bd76ff60-acd2-4925-aaa6-7b91eea69c34.lovable.app-1782819176032.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4b66b4ae-5a14-4452-bafd-6e3e429db0c4/id-preview-042a56e4--bd76ff60-acd2-4925-aaa6-7b91eea69c34.lovable.app-1782819176032.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
