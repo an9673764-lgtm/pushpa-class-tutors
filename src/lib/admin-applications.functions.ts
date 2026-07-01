@@ -37,8 +37,8 @@ export const updateApplicationStatus = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const patch: Record<string, unknown> = { status: data.status };
-    if (data.admin_notes !== undefined) patch.admin_notes = data.admin_notes;
+    const patch: { status: Status; admin_notes?: string | null } = { status: data.status };
+    if (data.admin_notes !== undefined) patch.admin_notes = data.admin_notes ?? null;
     const { error } = await context.supabase
       .from("tutor_applications")
       .update(patch)
