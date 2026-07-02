@@ -219,3 +219,43 @@
   border: 1px solid color-mix(in oklab, white 55%, transparent);
   box-shadow: var(--shadow-soft);
 }
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-14px); }
+}
+@keyframes float-y-alt {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(10px); }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.55); }
+  70%  { box-shadow: 0 0 0 18px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+@keyframes shimmer-bg {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@utility animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
+@utility animate-float-slow {
+  animation: float-y-alt 8s ease-in-out infinite;
+}
+@utility animate-pulse-ring {
+  animation: pulse-ring 1.8s cubic-bezier(0.66, 0, 0, 1) infinite;
+}
+@utility animate-shimmer {
+  background-size: 200% 200%;
+  animation: shimmer-bg 12s ease infinite;
+}
+@utility animate-marquee {
+  animation: marquee-x 40s linear infinite;
+}
