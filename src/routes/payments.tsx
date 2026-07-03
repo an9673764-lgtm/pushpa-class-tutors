@@ -111,6 +111,22 @@ const paymentIcons = [
   { label: "UPI", color: "#1E3A8A" },
 ];
 
+const pricingRows = [
+  { level: "Years 2–8", rate: "£12", monthly: "£144", months3: "£432", months6: "£864", yearly: "£1,728" },
+  { level: "Years 2–8", rate: "£15", monthly: "£180", months3: "£540", months6: "£1,080", yearly: "£2,160" },
+  { level: "Years 9–GCSE", rate: "£15", monthly: "£180", months3: "£540", months6: "£1,080", yearly: "£2,160" },
+  { level: "Years 9–GCSE", rate: "£20", monthly: "£240", months3: "£720", months6: "£1,440", yearly: "£2,880" },
+  { level: "AS & A Level", rate: "£25", monthly: "£300", months3: "£900", months6: "£1,800", yearly: "£3,600" },
+  { level: "AS & A Level", rate: "£30", monthly: "£360", months3: "£1,080", months6: "£2,160", yearly: "£4,320" },
+];
+
+const discountRows = [
+  { plan: "Monthly", discount: "No discount" },
+  { plan: "3 Months", discount: "5% Off" },
+  { plan: "6 Months", discount: "10% Off" },
+  { plan: "Yearly", discount: "15% Off" },
+];
+
 export default function PaymentsPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -138,6 +154,81 @@ export default function PaymentsPage() {
           <p className="mt-4 mx-auto max-w-2xl text-lg text-white/85">
             Choose your preferred payment method and complete your enrollment securely.
           </p>
+        </div>
+      </section>
+
+      {/* PRICING TABLES */}
+      <section className="container-page pb-4">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#2563EB]/10 text-[#2563EB] px-4 py-1.5 text-xs font-bold uppercase tracking-wider">
+            💰 Transparent Pricing
+          </div>
+          <h2 className="mt-4 text-3xl md:text-4xl font-bold text-[#0F172A]">
+            Class Plans & Pricing
+          </h2>
+          <p className="mt-3 text-slate-600 max-w-2xl mx-auto">
+            Based on 12 classes per month. Choose the plan that fits your learning goals.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Pricing table */}
+          <div className="lg:col-span-2 rounded-3xl bg-white shadow-xl border border-slate-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-[#0F172A] to-[#1E3A8A] px-6 py-4">
+              <h3 className="text-white font-bold text-lg">Plan Prices by Level</h3>
+              <p className="text-white/70 text-xs mt-1">All prices in GBP (£)</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 text-slate-600">
+                  <tr>
+                    <th className="text-left font-semibold px-4 py-3">Level</th>
+                    <th className="text-right font-semibold px-4 py-3">Hourly</th>
+                    <th className="text-right font-semibold px-4 py-3">Monthly<br/><span className="text-[10px] font-normal">(12 Classes)</span></th>
+                    <th className="text-right font-semibold px-4 py-3">3 Months</th>
+                    <th className="text-right font-semibold px-4 py-3">6 Months</th>
+                    <th className="text-right font-semibold px-4 py-3">Yearly<br/><span className="text-[10px] font-normal">(12 Months)</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pricingRows.map((r, i) => (
+                    <tr key={i} className="border-t border-slate-100 hover:bg-slate-50/70 transition">
+                      <td className="px-4 py-3 font-semibold text-[#0F172A]">{r.level}</td>
+                      <td className="px-4 py-3 text-right text-[#2563EB] font-bold">{r.rate}</td>
+                      <td className="px-4 py-3 text-right text-slate-700">{r.monthly}</td>
+                      <td className="px-4 py-3 text-right text-slate-700">{r.months3}</td>
+                      <td className="px-4 py-3 text-right text-slate-700">{r.months6}</td>
+                      <td className="px-4 py-3 text-right font-bold text-[#0F172A]">{r.yearly}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Discounts card */}
+          <div className="rounded-3xl bg-white shadow-xl border border-slate-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-[#F59E0B] to-[#FBBF24] px-6 py-4">
+              <h3 className="text-[#0F172A] font-bold text-lg">🎉 Longer Plan Discounts</h3>
+              <p className="text-[#0F172A]/70 text-xs mt-1">Save more when you commit longer</p>
+            </div>
+            <ul className="p-4 divide-y divide-slate-100">
+              {discountRows.map((d) => (
+                <li key={d.plan} className="flex items-center justify-between py-3 px-2">
+                  <span className="font-semibold text-[#0F172A]">{d.plan}</span>
+                  <span
+                    className={`text-sm font-bold px-3 py-1 rounded-full ${
+                      d.discount === "No discount"
+                        ? "bg-slate-100 text-slate-500"
+                        : "bg-emerald-100 text-emerald-700"
+                    }`}
+                  >
+                    {d.discount}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
