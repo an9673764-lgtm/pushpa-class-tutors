@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TutorsRouteImport } from './routes/tutors'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as CurriculumsRouteImport } from './routes/curriculums'
 import { Route as CoursesRouteImport } from './routes/courses'
@@ -30,11 +29,6 @@ const TutorsRoute = TutorsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PaymentsRoute = PaymentsRouteImport.update({
-  id: '/payments',
-  path: '/payments',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -90,7 +84,6 @@ export interface FileRoutesByFullPath {
   '/courses': typeof CoursesRoute
   '/curriculums': typeof CurriculumsRoute
   '/faq': typeof FaqRoute
-  '/payments': typeof PaymentsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutors': typeof TutorsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -103,7 +96,6 @@ export interface FileRoutesByTo {
   '/courses': typeof CoursesRoute
   '/curriculums': typeof CurriculumsRoute
   '/faq': typeof FaqRoute
-  '/payments': typeof PaymentsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutors': typeof TutorsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -118,7 +110,6 @@ export interface FileRoutesById {
   '/courses': typeof CoursesRoute
   '/curriculums': typeof CurriculumsRoute
   '/faq': typeof FaqRoute
-  '/payments': typeof PaymentsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutors': typeof TutorsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -133,7 +124,6 @@ export interface FileRouteTypes {
     | '/courses'
     | '/curriculums'
     | '/faq'
-    | '/payments'
     | '/sitemap.xml'
     | '/tutors'
     | '/admin'
@@ -146,7 +136,6 @@ export interface FileRouteTypes {
     | '/courses'
     | '/curriculums'
     | '/faq'
-    | '/payments'
     | '/sitemap.xml'
     | '/tutors'
     | '/admin'
@@ -160,7 +149,6 @@ export interface FileRouteTypes {
     | '/courses'
     | '/curriculums'
     | '/faq'
-    | '/payments'
     | '/sitemap.xml'
     | '/tutors'
     | '/_authenticated/admin'
@@ -175,7 +163,6 @@ export interface RootRouteChildren {
   CoursesRoute: typeof CoursesRoute
   CurriculumsRoute: typeof CurriculumsRoute
   FaqRoute: typeof FaqRoute
-  PaymentsRoute: typeof PaymentsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TutorsRoute: typeof TutorsRoute
 }
@@ -194,13 +181,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/payments': {
-      id: '/payments'
-      path: '/payments'
-      fullPath: '/payments'
-      preLoaderRoute: typeof PaymentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -289,7 +269,6 @@ const rootRouteChildren: RootRouteChildren = {
   CoursesRoute: CoursesRoute,
   CurriculumsRoute: CurriculumsRoute,
   FaqRoute: FaqRoute,
-  PaymentsRoute: PaymentsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TutorsRoute: TutorsRoute,
 }
