@@ -591,6 +591,7 @@ function PaymentSuccess({
   duration: DurationKey;
   total: number;
 }) {
+  const navigate = useNavigate();
   const receiptId = useMemo(
     () => `PE-${Date.now().toString(36).toUpperCase()}`,
     [],
@@ -619,12 +620,22 @@ function PaymentSuccess({
         </p>
       </div>
       <div className="p-6 pt-0 flex flex-col sm:flex-row gap-3">
-        <Link
-          to="/"
-          className="flex-1 inline-flex items-center justify-center rounded-xl bg-[#0F172A] px-5 py-3 text-sm font-bold text-white"
+        <button
+          onClick={() =>
+            navigate({
+              to: "/schedule",
+              search: {
+                type: "paid",
+                plan_name: plan.title,
+                plan_duration: DURATION_LABELS[duration].label,
+                plan_amount: total,
+              },
+            })
+          }
+          className="flex-1 inline-flex items-center justify-center rounded-xl bg-[#10B981] px-5 py-3 text-sm font-bold text-white"
         >
-          Back to Home
-        </Link>
+          Schedule Your First Class →
+        </button>
         <Link
           to="/contact"
           className="flex-1 inline-flex items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-[#0F172A] hover:bg-slate-50"

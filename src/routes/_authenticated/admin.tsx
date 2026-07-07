@@ -10,7 +10,13 @@ import {
   getResumeSignedUrl,
   type ApplicationStatus,
 } from "@/lib/admin-applications.functions";
-import { Loader2, Download, LogOut, Search, FileText } from "lucide-react";
+import {
+  listBookings,
+  rescheduleBooking,
+  cancelBooking,
+  type BookingRow,
+} from "@/lib/booking.functions";
+import { Loader2, Download, LogOut, Search, FileText, Video, Calendar as CalendarIcon, XCircle } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -49,6 +55,7 @@ const STATUS_STYLES: Record<ApplicationStatus, string> = {
 function AdminDashboard() {
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const [tab, setTab] = useState<"applications" | "meetings">("applications");
   const listFn = useServerFn(listApplications);
   const updateFn = useServerFn(updateApplicationStatus);
   const signFn = useServerFn(getResumeSignedUrl);
@@ -141,16 +148,16 @@ function AdminDashboard() {
     <div className="container-page py-8">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="font-serif text-3xl font-semibold">Tutor Applications</h1>
-          <p className="text-sm text-muted-foreground">Review, filter, and update submissions.</p>
+          <h1 className="font-serif text-3xl font-semibold">Admin Dashboard</h1>
+          <p className="text-sm text-muted-foreground">Manage tutor applications and scheduled meetings.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          {tab === "applications" && <button
             onClick={handleExportCsv}
             className="inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm font-medium hover:bg-secondary"
           >
             <Download className="size-4" /> Export CSV
-          </button>
+          </button>}
           <button
             onClick={handleSignOut}
             className="inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm font-medium hover:bg-secondary"
@@ -160,6 +167,23 @@ function AdminDashboard() {
         </div>
       </div>
 
+      <div className="mb-6 inline-flex rounded-lg border border-border p-1 bg-background">
+        <button
+          onClick={() => setTab("applications")}
+          className={`px-4 py-2 text-sm font-semibold rounded-md ${tab === "applications" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Tutor Applications
+        </button>
+        <button
+          onClick={() => setTab("meetings")}
+          className={`px-4 py-2 text-sm font-semibold rounded-md ${tab === "meetings" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Meetings
+        </button>
+      </div>
+
+      {tab === "meetings" ? <MeetingsPanel /> : (
+      <>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         {(["all", "pending", "approved", "rejected"] as const).map((s) => (
           <button
@@ -261,6 +285,207 @@ function AdminDashboard() {
           saving={updateMut.isPending}
         />
       )}
+      </>
+      )}
+    </div>
+  );
+}
+
+/* ============================ MEETINGS PANEL ============================ */
+
+function MeetingsPanel() {
+  const qc = useQueryClient();
+  const listFn = useServerFn(listBookings);
+  const rescheduleFn = useServerFn(rescheduleBooking);
+  const cancelFn = useServerFn(cancelBooking);
+  const [filter, setFilter] = useState<"upcoming" | "past" | "all" | "cancelled">("upcoming");
+  const [editing, setEditing] = useState<BookingRow | null>(null);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["admin-bookings"],
+    queryFn: () => (listFn as () => Promise<{ bookings: BookingRow[] }>)(),
+  });
+  useEffect(() => { if (error) toast.error(error instanceof Error ? error.message : "Failed to load meetings"); }, [error]);
+
+  const bookings = data?.bookings ?? [];
+  const today = new Date().toISOString().slice(0, 10);
+  const filtered = useMemo(() => {
+    return bookings.filter((b) => {
+      if (filter === "cancelled") return b.status === "cancelled";
+      if (b.status === "cancelled") return false;
+      if (filter === "upcoming") return b.meeting_date >= today;
+      if (filter === "past") return b.meeting_date < today;
+      return true;
+    });
+  }, [bookings, filter, today]);
+
+  const cancelMut = useMutation({
+    mutationFn: (id: string) => (cancelFn as (o: { data: { id: string } }) => Promise<{ ok: true }>)({ data: { id } }),
+    onSuccess: () => { toast.success("Meeting cancelled"); qc.invalidateQueries({ queryKey: ["admin-bookings"] }); },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Cancel failed"),
+  });
+
+  const rescheduleMut = useMutation({
+    mutationFn: (vars: { id: string; meeting_date: string; meeting_time: string }) =>
+      (rescheduleFn as (o: { data: typeof vars }) => Promise<{ ok: true }>)({ data: vars }),
+    onSuccess: () => {
+      toast.success("Rescheduled — new Meet link generated");
+      qc.invalidateQueries({ queryKey: ["admin-bookings"] });
+      setEditing(null);
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Reschedule failed"),
+  });
+
+  return (
+    <>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {(["upcoming", "past", "all", "cancelled"] as const).map((k) => (
+          <button
+            key={k}
+            onClick={() => setFilter(k)}
+            className={`rounded-full border px-3 py-1.5 text-xs font-semibold capitalize ${
+              filter === k ? "border-primary bg-primary/10 text-primary" : "border-border bg-background hover:bg-secondary/50"
+            }`}
+          >{k}</button>
+        ))}
+      </div>
+
+      <div className="rounded-lg border border-border bg-background overflow-hidden">
+        {isLoading ? (
+          <div className="p-12 flex items-center justify-center text-muted-foreground">
+            <Loader2 className="size-5 animate-spin mr-2" /> Loading…
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="p-12 text-center text-muted-foreground text-sm">No meetings found.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-secondary/50 text-xs uppercase tracking-wide text-muted-foreground">
+                <tr>
+                  <th className="text-left px-4 py-3">Student</th>
+                  <th className="text-left px-4 py-3">Contact</th>
+                  <th className="text-left px-4 py-3">Type / Plan</th>
+                  <th className="text-left px-4 py-3">Date & Time</th>
+                  <th className="text-left px-4 py-3">Meet</th>
+                  <th className="text-left px-4 py-3">Status</th>
+                  <th className="text-right px-4 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((b) => (
+                  <tr key={b.id} className="border-t border-border hover:bg-secondary/30 align-top">
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{b.student_name}</div>
+                      {b.parent_name && <div className="text-xs text-muted-foreground">Parent: {b.parent_name}</div>}
+                      {(b.curriculum || b.grade) && <div className="text-xs text-muted-foreground">{[b.grade, b.curriculum].filter(Boolean).join(" · ")}</div>}
+                    </td>
+                    <td className="px-4 py-3 text-xs">
+                      <div>{b.email}</div>
+                      {b.phone && <div className="text-muted-foreground">{b.phone}</div>}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-medium ${b.booking_type === "demo" ? "bg-blue-100 text-blue-800 border-blue-200" : "bg-emerald-100 text-emerald-800 border-emerald-200"}`}>
+                        {b.booking_type === "demo" ? "Demo" : "Paid"}
+                      </span>
+                      {b.plan_name && <div className="text-xs text-muted-foreground mt-1">{b.plan_name}</div>}
+                      {b.plan_amount != null && <div className="text-xs font-semibold">£{Number(b.plan_amount).toLocaleString()}</div>}
+                    </td>
+                    <td className="px-4 py-3 text-xs whitespace-nowrap">
+                      <div className="font-medium text-foreground">{b.meeting_date}</div>
+                      <div className="text-muted-foreground">{b.meeting_time} {b.timezone}</div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {b.meet_link ? (
+                        <a href={b.meet_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline text-xs font-medium">
+                          <Video className="size-3.5" /> Join
+                        </a>
+                      ) : <span className="text-xs text-muted-foreground">—</span>}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-medium ${
+                        b.status === "scheduled" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                        b.status === "completed" ? "bg-emerald-100 text-emerald-800 border-emerald-200" :
+                        "bg-rose-100 text-rose-800 border-rose-200"
+                      }`}>{b.status}</span>
+                      {b.payment_status && <div className="text-[10px] mt-1 text-muted-foreground">Pay: {b.payment_status}</div>}
+                    </td>
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                      {b.status !== "cancelled" && (
+                        <>
+                          <button
+                            onClick={() => setEditing(b)}
+                            className="text-primary hover:underline text-xs font-medium mr-3"
+                          >
+                            <CalendarIcon className="size-3.5 inline -mt-0.5" /> Reschedule
+                          </button>
+                          <button
+                            onClick={() => { if (confirm(`Cancel meeting with ${b.student_name}?`)) cancelMut.mutate(b.id); }}
+                            className="text-rose-600 hover:underline text-xs font-medium"
+                          >
+                            <XCircle className="size-3.5 inline -mt-0.5" /> Cancel
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {editing && (
+        <RescheduleModal
+          booking={editing}
+          onClose={() => setEditing(null)}
+          onSubmit={(date, time) => rescheduleMut.mutate({ id: editing.id, meeting_date: date, meeting_time: time })}
+          saving={rescheduleMut.isPending}
+        />
+      )}
+    </>
+  );
+}
+
+function RescheduleModal({
+  booking, onClose, onSubmit, saving,
+}: {
+  booking: BookingRow;
+  onClose: () => void;
+  onSubmit: (date: string, time: string) => void;
+  saving: boolean;
+}) {
+  const [date, setDate] = useState(booking.meeting_date);
+  const [time, setTime] = useState(booking.meeting_time);
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4" role="dialog" aria-modal="true">
+      <div className="w-full max-w-md rounded-2xl bg-background p-6 shadow-2xl">
+        <h3 className="font-serif text-xl font-semibold">Reschedule meeting</h3>
+        <p className="text-sm text-muted-foreground mt-1">A new unique Google Meet link will be generated and the student will be notified by email.</p>
+        <div className="mt-4 space-y-3">
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground uppercase">Date</label>
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
+              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground uppercase">Time (HH:MM 24h)</label>
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)}
+              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+        </div>
+        <div className="mt-6 flex justify-end gap-2">
+          <button onClick={onClose} className="rounded-md border border-input px-3 py-2 text-sm">Cancel</button>
+          <button
+            onClick={() => onSubmit(date, time)}
+            disabled={saving}
+            className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60 inline-flex items-center gap-2"
+          >
+            {saving && <Loader2 className="size-4 animate-spin" />}
+            Save & regenerate Meet
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
