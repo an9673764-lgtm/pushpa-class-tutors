@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TutorsRouteImport } from './routes/tutors'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as CurriculumsRouteImport } from './routes/curriculums'
@@ -30,6 +31,11 @@ const TutorsRoute = TutorsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleRoute = ScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaymentsRoute = PaymentsRouteImport.update({
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/curriculums': typeof CurriculumsRoute
   '/faq': typeof FaqRoute
   '/payments': typeof PaymentsRoute
+  '/schedule': typeof ScheduleRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutors': typeof TutorsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/curriculums': typeof CurriculumsRoute
   '/faq': typeof FaqRoute
   '/payments': typeof PaymentsRoute
+  '/schedule': typeof ScheduleRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutors': typeof TutorsRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/curriculums': typeof CurriculumsRoute
   '/faq': typeof FaqRoute
   '/payments': typeof PaymentsRoute
+  '/schedule': typeof ScheduleRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tutors': typeof TutorsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/curriculums'
     | '/faq'
     | '/payments'
+    | '/schedule'
     | '/sitemap.xml'
     | '/tutors'
     | '/admin'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/curriculums'
     | '/faq'
     | '/payments'
+    | '/schedule'
     | '/sitemap.xml'
     | '/tutors'
     | '/admin'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/curriculums'
     | '/faq'
     | '/payments'
+    | '/schedule'
     | '/sitemap.xml'
     | '/tutors'
     | '/_authenticated/admin'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   CurriculumsRoute: typeof CurriculumsRoute
   FaqRoute: typeof FaqRoute
   PaymentsRoute: typeof PaymentsRoute
+  ScheduleRoute: typeof ScheduleRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TutorsRoute: typeof TutorsRoute
 }
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule': {
+      id: '/schedule'
+      path: '/schedule'
+      fullPath: '/schedule'
+      preLoaderRoute: typeof ScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payments': {
@@ -290,6 +310,7 @@ const rootRouteChildren: RootRouteChildren = {
   CurriculumsRoute: CurriculumsRoute,
   FaqRoute: FaqRoute,
   PaymentsRoute: PaymentsRoute,
+  ScheduleRoute: ScheduleRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TutorsRoute: TutorsRoute,
 }
