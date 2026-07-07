@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import heroImg from "@/assets/hero-students.jpg";
 import tutorImg from "@/assets/tutor-teaching.jpg";
+import { CurriculumCarousel } from "@/components/site/CurriculumCarousel";
 
 export const Route = createFileRoute("/")({
   head: () => ({
