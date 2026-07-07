@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import heroImg from "@/assets/hero-students.jpg";
 import tutorImg from "@/assets/tutor-teaching.jpg";
+import { CurriculumCarousel } from "@/components/site/CurriculumCarousel";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -363,14 +364,8 @@ function Index() {
               See all <ArrowRight className="size-4" />
             </Link>
           </div>
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {curriculums.map((c) => (
-              <div key={c.name} className="card-soft p-5 hover:-translate-y-1 transition-transform">
-                <div className="text-3xl">{c.flag}</div>
-                <h3 className="mt-3 text-base font-semibold">{c.name}</h3>
-                <p className="mt-1 text-xs text-muted-foreground">{c.note}</p>
-              </div>
-            ))}
+          <div className="mt-10">
+            <CurriculumCarousel items={curriculums} />
           </div>
         </div>
       </section>
