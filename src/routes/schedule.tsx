@@ -98,9 +98,9 @@ function SchedulePage() {
   const bookedSet = useMemo(() => new Set(bookedData?.slots ?? []), [bookedData]);
 
   const createFn = useServerFn(createBookingAndMeeting);
-  type CreateInput = Parameters<typeof createBookingAndMeeting>[0]["data"];
   const createMut = useMutation({
-    mutationFn: (payload: CreateInput) => createFn({ data: payload }),
+    mutationFn: (payload: Record<string, unknown>) =>
+      (createFn as (opts: { data: unknown }) => Promise<{ booking: { id: string } }>)({ data: payload }),
     onSuccess: (result) => {
       sessionStorage.removeItem("pending-booking");
       toast.success("Meeting scheduled! Redirecting…");
