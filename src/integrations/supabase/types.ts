@@ -14,6 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          created_at: string
+          curriculum: string | null
+          duration_minutes: number
+          email: string
+          google_event_id: string | null
+          grade: string | null
+          id: string
+          meet_link: string | null
+          meeting_date: string
+          meeting_time: string
+          notes: string | null
+          parent_name: string | null
+          payment_id: string | null
+          payment_status: string | null
+          phone: string | null
+          plan_amount: number | null
+          plan_duration: string | null
+          plan_name: string | null
+          status: Database["public"]["Enums"]["booking_status"]
+          student_name: string
+          subject: string | null
+          timezone: string
+          tutor_email: string | null
+          updated_at: string
+        }
+        Insert: {
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          created_at?: string
+          curriculum?: string | null
+          duration_minutes?: number
+          email: string
+          google_event_id?: string | null
+          grade?: string | null
+          id?: string
+          meet_link?: string | null
+          meeting_date: string
+          meeting_time: string
+          notes?: string | null
+          parent_name?: string | null
+          payment_id?: string | null
+          payment_status?: string | null
+          phone?: string | null
+          plan_amount?: number | null
+          plan_duration?: string | null
+          plan_name?: string | null
+          status?: Database["public"]["Enums"]["booking_status"]
+          student_name: string
+          subject?: string | null
+          timezone?: string
+          tutor_email?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          created_at?: string
+          curriculum?: string | null
+          duration_minutes?: number
+          email?: string
+          google_event_id?: string | null
+          grade?: string | null
+          id?: string
+          meet_link?: string | null
+          meeting_date?: string
+          meeting_time?: string
+          notes?: string | null
+          parent_name?: string | null
+          payment_id?: string | null
+          payment_status?: string | null
+          phone?: string | null
+          plan_amount?: number | null
+          plan_duration?: string | null
+          plan_name?: string | null
+          status?: Database["public"]["Enums"]["booking_status"]
+          student_name?: string
+          subject?: string | null
+          timezone?: string
+          tutor_email?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tutor_applications: {
         Row: {
           admin_notes: string | null
@@ -105,6 +189,8 @@ export type Database = {
     Enums: {
       app_role: "admin" | "moderator" | "user"
       application_status: "pending" | "approved" | "rejected"
+      booking_status: "scheduled" | "completed" | "cancelled"
+      booking_type: "demo" | "paid"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -234,6 +320,8 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "moderator", "user"],
       application_status: ["pending", "approved", "rejected"],
+      booking_status: ["scheduled", "completed", "cancelled"],
+      booking_type: ["demo", "paid"],
     },
   },
 } as const
