@@ -24,8 +24,10 @@ import {
   Phone,
   MessageCircle,
 } from "lucide-react";
-import heroImg from "@/assets/hero-students.jpg";
-import tutorImg from "@/assets/tutor-teaching.jpg";
+import heroAsset from "@/assets/hero-students-new.png.asset.json";
+import tutorAsset from "@/assets/tutor-pushpa.png.asset.json";
+const heroImg = heroAsset.url;
+const tutorImg = tutorAsset.url;
 import { CurriculumCarousel } from "@/components/site/CurriculumCarousel";
 
 export const Route = createFileRoute("/")({
