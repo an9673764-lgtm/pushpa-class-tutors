@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone, Globe, Clock, GraduationCap } from "lucide-react";
+import { Mail, Phone, Globe, Clock } from "lucide-react";
+import logoAsset from "@/assets/pushpa-logo.png.asset.json";
 
 export function Footer() {
   return (
@@ -7,10 +8,7 @@ export function Footer() {
       <div className="container-page py-14 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">
-            <span className="grid place-items-center size-9 rounded-lg bg-primary text-primary-foreground">
-              <GraduationCap className="size-5" />
-            </span>
-            <span className="font-serif text-lg font-semibold">Pushpa Online Tuition</span>
+            <img src={logoAsset.url} alt="Pushpa Online Tuition" className="h-9 w-auto" />
           </div>
           <p className="mt-4 max-w-md text-sm text-muted-foreground">
             Personalised, live online tutoring for Year 2 to A-Level students worldwide.
