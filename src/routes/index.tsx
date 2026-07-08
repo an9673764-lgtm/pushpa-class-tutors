@@ -152,8 +152,8 @@ function Index() {
         <FloatingIcon className="right-[7%] bottom-[10%] animate-float" tint="blue"><Atom className="size-5" /></FloatingIcon>
         <FloatingIcon className="left-[45%] top-[6%] animate-float" tint="amber"><Calculator className="size-5" /></FloatingIcon>
 
-        <div className="container-page relative pt-14 pb-20 md:pt-20 md:pb-28 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
+        <div className="container-page relative pt-8 pb-10 md:pt-12 md:pb-14 grid lg:grid-cols-2 gap-10 items-center">
+          <div className="space-y-6">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#2563EB]/10 border border-[#2563EB]/20 shadow-sm">
               <span className="flex h-2 w-2 rounded-full bg-[#2563EB] mr-2 animate-pulse" />
               <span className="text-xs font-semibold uppercase tracking-wider text-[#2563EB]">
@@ -263,6 +263,27 @@ function Index() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* TRUST STATS STRIP */}
+      <section className="border-y border-border bg-white">
+        <div className="container-page py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { n: "5,000+", l: "Students Taught" },
+            { n: "150+", l: "Expert Tutors" },
+            { n: "98%", l: "Success Rate" },
+            { n: "4.9/5", l: "Parent Rating" },
+          ].map((s) => (
+            <div key={s.l} className="text-center">
+              <p className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] to-[#F59E0B]">
+                {s.n}
+              </p>
+              <p className="mt-1 text-xs md:text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                {s.l}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
