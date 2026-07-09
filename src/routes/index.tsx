@@ -22,8 +22,8 @@ import {
   ChevronDown,
   Mail,
   Phone,
-  MessageCircle,
 } from "lucide-react";
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import heroAsset from "@/assets/hero-students-new.png.asset.json";
 import tutorAsset from "@/assets/tutor-pushpa.png.asset.json";
 const heroImg = heroAsset.url;
