@@ -22,8 +22,8 @@ import {
   ChevronDown,
   Mail,
   Phone,
-  MessageCircle,
 } from "lucide-react";
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import heroAsset from "@/assets/hero-students-new.png.asset.json";
 import tutorAsset from "@/assets/tutor-pushpa.png.asset.json";
 const heroImg = heroAsset.url;
@@ -550,7 +550,7 @@ function Index() {
                 +91 89395 77588
               </a>
               <a href="https://wa.me/918939577588" className="flex items-center gap-3 hover:text-[#2563EB] transition">
-                <span className="grid place-items-center size-10 rounded-xl bg-[#F59E0B]/15 text-[#F59E0B]"><MessageCircle className="size-5" /></span>
+                <span className="grid place-items-center size-10 rounded-xl bg-[#F59E0B]/15 text-[#F59E0B]"><WhatsAppIcon className="size-5" /></span>
                 WhatsApp our team
               </a>
             </div>
