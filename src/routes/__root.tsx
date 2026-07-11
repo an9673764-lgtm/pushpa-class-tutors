@@ -13,6 +13,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "../components/site/Header";
 import { Footer } from "../components/site/Footer";
+import { FloatingCTA } from "../components/site/FloatingCTA";
+import { FloatingWhatsApp } from "../components/site/FloatingWhatsApp";
+import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -95,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" },
       {
         rel: "stylesheet",
         href: appCss,
@@ -148,7 +151,10 @@ function RootComponent() {
           <Outlet />
         </main>
         <Footer />
+        <FloatingCTA />
+        <FloatingWhatsApp />
       </div>
+      <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );
 }
